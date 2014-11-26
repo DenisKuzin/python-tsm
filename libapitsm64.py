@@ -1,4 +1,4 @@
-from ctypes import cdll, c_char, c_ubyte, c_short, c_ushort, c_int, c_uint, c_ulong, c_long, byref, Structure
+from ctypes import cdll, c_char, c_ubyte, c_short, c_ushort, c_int, c_uint, c_ulong, c_long, pointer, byref, Structure
 
 LIBRARY_FILENAME = 'libApiTSM64.so'
 api_lib = cdll.LoadLibrary(LIBRARY_FILENAME)
@@ -24,10 +24,10 @@ class dsmApiVersionEx(Structure):
         ('subLevel', dsUint16_t),
     ]
 
-def dsmQueryApiVersionEx():
-    ver = dsmApiVersionEx()
-    api_lib.dsmQueryApiVersionEx(byref(ver))
-    return ver
+dsmBeginGetData = api_lib.dsmBeginGetData
+dsmBeginGetData.argtypes = ()
+dsmBeginGetData.restype = None
 
-if __name__ == '__main__':
-    ver = dsmQueryApiVersionEx()
+dsmQueryApiVersionEx = api_lib.dsmQueryApiVersionEx
+dsmQueryApiVersionEx.argtypes = (pointer(dsmApiVersionEx))
+dsmQueryApiVersionEx.restype = None
